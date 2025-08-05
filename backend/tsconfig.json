@@ -1,18 +1,28 @@
 {
     "compilerOptions": {
-      "target": "ES2020",
-      "module": "commonjs",
-      "moduleResolution": "node",
-      "rootDir": "./src",
-      "outDir": "./dist",
-      "esModuleInterop": true,
-      "forceConsistentCasingInFileNames": true,
-      "strict": true,
-      "skipLibCheck": true,
-      "resolveJsonModule": true,
+      "target": "ES2020",                          // Modern JS features
+      "module": "esnext",                          // Node.js uses esmodule
+      "rootDir": "./src",                          // Your TypeScript source files
+      "outDir": "./dist",                          // Output for compiled JS
+      "strict": true,                              // Enable all strict type-checking
+      "moduleResolution": "node",                  // For resolving modules like Node.js
+      "esModuleInterop": true,                     // For importing CommonJS modules easily
+      "forceConsistentCasingInFileNames": true,    // Helps avoid case-sensitive bugs
+      "skipLibCheck": true,                        // Skip type checking of .d.ts files
+      "resolveJsonModule": true,                   // Allow importing `.json` files
+      "baseUrl": ".",                              // Base path for module resolution
+      "paths": {
+        "@config/*": ["src/config/*"],
+        "@controllers/*": ["src/controllers/*"],
+        "@routes/*": ["src/routes/*"],
+        "@models/*": ["src/models/*"],
+        "@services/*": ["src/services/*"],
+        "@middleware/*": ["src/middleware/*"],
+        "@utils/*": ["src/utils/*"]
+      },
       "types": ["node", "express"]
     },
-    "include": ["src", "src/server.ts"],
+    "include": ["src/**/*"],
     "exclude": ["node_modules", "dist"]
   }
   
