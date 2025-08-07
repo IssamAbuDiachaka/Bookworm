@@ -1,7 +1,10 @@
 import { Request, Response } from "express";
 import bcrypt from "bcryptjs";
-import { User } from "../models/user.model";
+import { IUser, User } from "../models/user.model";
 import { registerSchema } from "../validations/auth.validation";
+import { loginSchema } from "../validations/auth.validation";
+import { generateAccessToken, generateRefreshToken } from "../utils/jwt";
+
 
 export const registerUser = async (req: Request, res: Response) => {
   try {
@@ -52,3 +55,62 @@ export const registerUser = async (req: Request, res: Response) => {
     return res.status(500).json({ message: "Internal server error" });
   }
 };
+
+
+export const loginUser = async (req: Request, res: Response) => {
+  try {
+    // Validate input
+    const parsed = loginSchema.safeParse(req.body);
+    if (!parsed.success) {
+      return res.status(400).json({
+        message: "Validation failed",
+        errors: parsed.error.flatten().fieldErrors
+      });
+    }
+
+    const { email, password } = parsed.data;
+
+    // Find user
+    const user = await User.findOne({ email }) as IUser | null;
+    if (!user) {
+      return res.status(401).json({ message: "Invalid credentials" });
+    }
+
+    // Compare passwords
+    const isMatch = await bcrypt.compare(password, user.password);
+    if (!isMatch) {
+      return res.status(401).json({ message: "Invalid credentials" });
+    }
+
+    // Generate tokens
+    const accessToken = generateAccessToken(user._id.toString(), user.role);
+    const refreshToken = generateRefreshToken(user._id.toString());
+
+    // Set HTTP-only cookie
+    res.cookie("refreshToken", refreshToken, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      sameSite: "strict",
+      maxAge: 7 * 24 * 60 * 60 * 1000 // 7 days
+    });
+
+    // Return access token & user info
+    return res.status(200).json({
+      message: "Login successful",
+      accessToken,
+      user: {
+        _id: user._id,
+        name: user.name,
+        email: user.email,
+        role: user.role,
+        program: user.program,
+        avatar: user.avatar
+      }
+    });
+
+  } catch (err) {
+    console.error("Login Error:", err);
+    return res.status(500).json({ message: "Internal server error" });
+  }
+};
+

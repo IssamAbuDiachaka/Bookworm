@@ -3,7 +3,7 @@ import cors from 'cors';
 import helmet from 'helmet';
 import morgan from 'morgan';
 import cookieParser from 'cookie-parser';
-
+import authRouter from '@routes/auth.routes';
 const app = express();
 
 // Global Middlewares
@@ -17,6 +17,7 @@ app.use(cookieParser());
 // Healthcheck
 app.get('/', (_req, res) => res.send('🟢 TumaFinder API is running!'));
 
-// TODO: app.use('/api', routes); // Add routes here when ready
+//app.use('/api', routes); // Add routes here when ready
+app.use('/api/auth', authRouter);
 
 export default app;
