@@ -1,6 +1,6 @@
 import { z } from "zod";
 
-// Email + password format check
+// Email + password format check and validation
 export const registerSchema = z.object({
   name: z.string().min(2, "Name must be at least 2 characters"),
   email: z.email("Invalid email address"),

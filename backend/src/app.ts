@@ -17,7 +17,7 @@ app.use(cookieParser());
 // Healthcheck
 app.get('/', (_req, res) => res.send('🟢 TumaFinder API is running!'));
 
-//app.use('/api', routes); // Add routes here when ready
+//Routes
 app.use('/api/auth', authRouter);
 
 export default app;

@@ -4,6 +4,7 @@ import { IUser, User } from "../models/user.model";
 import { registerSchema } from "../validations/auth.validation";
 import { loginSchema } from "../validations/auth.validation";
 import { generateAccessToken, generateRefreshToken } from "../utils/jwt";
+import jwt from "jsonwebtoken";
 
 
 export const registerUser = async (req: Request, res: Response) => {
@@ -71,7 +72,7 @@ export const loginUser = async (req: Request, res: Response) => {
     const { email, password } = parsed.data;
 
     // Find user
-    const user = await User.findOne({ email }) as IUser | null;
+    const user = await User.findOne({ email }).exec();
     if (!user) {
       return res.status(401).json({ message: "Invalid credentials" });
     }
@@ -110,6 +111,52 @@ export const loginUser = async (req: Request, res: Response) => {
 
   } catch (err) {
     console.error("Login Error:", err);
+    return res.status(500).json({ message: "Internal server error" });
+  }
+};
+
+
+export const refreshAccessToken = async (req: Request, res: Response) => {
+  try {
+    // Get refresh token from cookie
+    const refreshToken = req.cookies.refreshToken;
+    if (!refreshToken) {
+      return res.status(401).json({ message: "Refresh token missing" });
+    }
+
+    // Verify token
+    let payload: any;
+    try {
+      payload = jwt.verify(refreshToken, process.env.JWT_REFRESH_SECRET!);
+    } catch {
+      return res.status(403).json({ message: "Invalid or expired refresh token" });
+    }
+
+    // Check if user still exists
+    const user = await User.findById(payload.userId).exec();
+    if (!user) {
+      return res.status(401).json({ message: "User not found" });
+    }
+
+    // Generate new tokens
+    const newAccessToken = generateAccessToken(user._id.toString(), user.role);
+
+    // Rotate refresh token
+    const newRefreshToken = generateRefreshToken(user._id.toString());
+    res.cookie("refreshToken", newRefreshToken, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      sameSite: "strict",
+      maxAge: 7 * 24 * 60 * 60 * 1000
+    });
+
+    // Return new access token
+    return res.status(200).json({
+      accessToken: newAccessToken
+    });
+
+  } catch (err) {
+    console.error("Refresh token error:", err);
     return res.status(500).json({ message: "Internal server error" });
   }
 };
