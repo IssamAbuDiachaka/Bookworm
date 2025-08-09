@@ -1,4 +1,4 @@
-import { Schema, model, Document, Types } from "mongoose";
+import mongoose,{ Schema, model, Document, Types } from "mongoose";
 
 // User roles
 export enum UserRole {
@@ -38,4 +38,4 @@ const userSchema = new Schema<IUser>(
   }
 );
 
-export const User = model<IUser>("User", userSchema);
+export const User = mongoose.model<IUser>("User", userSchema);

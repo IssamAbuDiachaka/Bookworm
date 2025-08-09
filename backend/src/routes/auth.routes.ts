@@ -5,9 +5,6 @@ const authRouter = Router();
 
 // register new user /api/auth/register
 authRouter.post("/register", registerUser);
-
-
-authRouter.post("/register", registerUser);
 authRouter.post("/login", loginUser);
 authRouter.post("/refresh", refreshAccessToken);
 
