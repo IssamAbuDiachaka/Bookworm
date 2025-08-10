@@ -1,17 +1,21 @@
 import cloudinary from '../config/cloudinary.js';
+import { UploadApiResponse } from 'cloudinary';
 
-export const uploadToCloudinary = (fileBuffer: Buffer, folder = 'uploads'): Promise<string> => {
+const uploadToCloudinary = (buffer: Buffer, folder = "bookworm_media"): Promise<UploadApiResponse> => {
   return new Promise((resolve, reject) => {
-    const uploadStream = cloudinary.uploader.upload_stream(
-      { folder, resource_type: 'image' },
+    const stream = cloudinary.uploader.upload_stream(
+      { folder },
       (error, result) => {
-        if (error || !result?.secure_url) {
-          return reject(error || new Error('Cloudinary upload failed'));
-        }
-        resolve(result.secure_url);
+        if (error) return reject(error);
+        if (!result) return reject(new Error("No result from Cloudinary"));
+        resolve(result);
       }
     );
 
-    uploadStream.end(fileBuffer);
+    // stream the buffer
+    const streamifier = require("streamifier");
+    streamifier.createReadStream(buffer).pipe(stream);
   });
 };
+
+export default uploadToCloudinary;

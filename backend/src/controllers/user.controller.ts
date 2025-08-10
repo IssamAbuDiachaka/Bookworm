@@ -1,6 +1,6 @@
 import { Request, Response } from 'express';
 import {User} from '../models/user.model';
-import { uploadToCloudinary } from '../utils/uploadToCloudinary';
+import uploadToCloudinary from '@utils/uploadToCloudinary';
 import { AuthenticatedRequest } from "../middlewares/auth.middleware";
 
 
