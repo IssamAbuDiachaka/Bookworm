@@ -4,6 +4,7 @@ import helmet from 'helmet';
 import morgan from 'morgan';
 import cookieParser from 'cookie-parser';
 import router from '@routes/index';
+
 const app = express();
 
 // Global Middlewares
@@ -16,6 +17,7 @@ app.use(cookieParser());
 
 // Healthcheck
 app.get('/', (_req, res) => res.send('🟢 TumaFinder API is running!'));
+
 
 //Routes
 app.use('/api', router);

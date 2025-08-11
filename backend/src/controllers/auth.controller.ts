@@ -98,7 +98,7 @@ export const loginUser = async (req: Request, res: Response) => {
     // Return access token & user info
     return res.status(200).json({
       message: "Login successful",
-      accessToken,
+      
       user: {
         _id: user._id,
         name: user.name,
@@ -106,7 +106,8 @@ export const loginUser = async (req: Request, res: Response) => {
         role: user.role,
         program: user.program,
         avatar: user.avatar
-      }
+      },
+      accessToken
     });
 
   } catch (err) {
