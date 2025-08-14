@@ -22,7 +22,6 @@ export interface IUser extends Document {
     address?: string;
     latitude?: number;
     longitude?: number,
-
   }
   isVerified?: boolean;
   verificationToken?: string | null;

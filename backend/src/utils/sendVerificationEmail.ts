@@ -3,8 +3,10 @@ import { sendEmail } from "../config/nodemailer";
 import { User, IUser } from "../models/user.model";
 
 export const sendVerificationEmail = async (user: IUser) => {
+  
   // Generate token
   const token = crypto.randomBytes(32).toString("hex");
+  console.log(`Verification token: ${token}`);
 
   // Set expiry (24 hours from now)
   const expiryDate = new Date();
@@ -16,14 +18,14 @@ export const sendVerificationEmail = async (user: IUser) => {
   await user.save();
 
   // Build verification link
-  const verifyLink = `${process.env.CLIENT_URL}/verify/${token}`;
+  const verifyLink = `${process.env.CLIENT_URL}/Click Here to Verify/${token}`;
 
   // Send email
   await sendEmail(
     user.email,
     "Verify Your Bookworm Account",
     `<p>Hi ${user.name},</p>
-     <p>Please verify your account by clicking the link below (valid for 24 hours):</p>
+     <p>Please verify your account by clicking the link below (this link is valid for 24 hours):</p>
      <a href="${verifyLink}">${verifyLink}</a>
      <p>If you did not register, please ignore this email.</p>`
   );

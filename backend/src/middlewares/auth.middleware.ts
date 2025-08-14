@@ -5,11 +5,11 @@ import jwt, { JwtPayload } from 'jsonwebtoken';
 
 
 export interface AuthenticatedRequest extends Request {
-  user?: { id: string; role: string };
+  user?: { id: string; role: string};
 }
 
   const authenticateJWT = (req: AuthenticatedRequest, res: Response, next: NextFunction): void => {
-
+  
   //Get token from "Authorization: Bearer <token>"
   const authHeader = req.headers.authorization;
 

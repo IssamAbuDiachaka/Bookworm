@@ -42,9 +42,11 @@ export const registerUser = async (req: Request, res: Response) => {
     //  Send verification link
     await sendVerificationEmail(newUser);
 
-    // Return safe response
+    // Return response
     return res.status(201).json({
+
       message: "Registration successful. Please check your email to verify your account.",
+
       user: {
         _id: newUser._id,
         name: newUser.name,
@@ -55,9 +57,6 @@ export const registerUser = async (req: Request, res: Response) => {
       },
        verificationsent: true
     });
-
-
-
   } catch (err) {
     console.error("Register Error:", err);
     return res.status(500).json({ message: "Internal server error" });
@@ -87,7 +86,7 @@ export const verifyUser = async (req: Request, res: Response) => {
     return res.json({ message: "Account verified successfully. You can now log in." });
   } catch (err) {
     console.error("Verify Error:", err);
-    return res.status(500).json({ message: "Internal server error" });
+    return res.status(500).json({ message: "Internal server error, from verify user" });
   }
 };
 
@@ -142,6 +141,10 @@ export const loginUser = async (req: Request, res: Response) => {
       return res.status(401).json({ message: "Invalid credentials" });
     }
 
+    if (!user.isVerified) {
+      return res.status(403).json({ message: "user is not verified"});
+    }
+
     // Compare passwords
     const isMatch = await bcrypt.compare(password, user.password);
     if (!isMatch) {
@@ -162,6 +165,7 @@ export const loginUser = async (req: Request, res: Response) => {
 
     // Return access token & user info
     return res.status(200).json({
+      
       message: "Login successful",
       
       user: {
