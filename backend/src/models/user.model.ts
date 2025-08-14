@@ -16,6 +16,19 @@ export interface IUser extends Document {
   role: UserRole;
   program: string;
   avatar?: string;
+  location?: {
+    city?: string;
+    country?: string;
+    address?: string;
+    latitude?: number;
+    longitude?: number,
+
+  }
+  isVerified?: boolean;
+  verificationToken?: string | null;
+  verificationTokenExpires?: Date | null; 
+  isActive?: boolean;
+  isDeleted?: boolean;
   createdAt: Date;
   updatedAt: Date;
 }
@@ -31,7 +44,10 @@ const userSchema = new Schema<IUser>(
       default: UserRole.STUDENT,
     },
     program: { type: String, required: true },
-    avatar: { type: String, default: "" }
+    avatar: { type: String, default: "" },
+    isVerified: {type: Boolean, default: false},
+    verificationToken: { type: String, default: null },
+    verificationTokenExpires: { type: Date, default: null }
   },
   {
     timestamps: true 

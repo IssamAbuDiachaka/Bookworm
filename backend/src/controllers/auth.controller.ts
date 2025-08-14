@@ -5,6 +5,7 @@ import { registerSchema } from "../validations/auth.validation";
 import { loginSchema } from "../validations/auth.validation";
 import { generateAccessToken, generateRefreshToken } from "../utils/jwt";
 import jwt from "jsonwebtoken";
+import { sendVerificationEmail } from "@utils/sendVerificationEmail";
 
 
 export const registerUser = async (req: Request, res: Response) => {
@@ -38,9 +39,12 @@ export const registerUser = async (req: Request, res: Response) => {
       program
     });
 
+    //  Send verification link
+    await sendVerificationEmail(newUser);
+
     // Return safe response
     return res.status(201).json({
-      message: "User registered successfully",
+      message: "Registration successful. Please check your email to verify your account.",
       user: {
         _id: newUser._id,
         name: newUser.name,
@@ -48,8 +52,11 @@ export const registerUser = async (req: Request, res: Response) => {
         role: newUser.role,
         program: newUser.program,
         avatar: newUser.avatar
-      }
+      },
+       verificationsent: true
     });
+
+
 
   } catch (err) {
     console.error("Register Error:", err);
@@ -57,6 +64,64 @@ export const registerUser = async (req: Request, res: Response) => {
   }
 };
 
+export const verifyUser = async (req: Request, res: Response) => {
+  try {
+    const { token } = req.params;
+
+    const user = await User.findOne({ verificationToken: token });
+    if (!user) {
+      return res.status(400).json({ message: "Invalid verification token" });
+    }
+
+    // Check if expired
+    if (!user.verificationTokenExpires || user.verificationTokenExpires < new Date()) {
+      return res.status(400).json({ message: "Verification link has expired" });
+    }
+
+    // Mark verified
+    user.isVerified = true;
+    user.verificationToken = null;
+    user.verificationTokenExpires = null;
+    await user.save();
+
+    return res.json({ message: "Account verified successfully. You can now log in." });
+  } catch (err) {
+    console.error("Verify Error:", err);
+    return res.status(500).json({ message: "Internal server error" });
+  }
+};
+
+export const resendVerificationEmail = async (req: Request, res: Response) => {
+  try {
+    const { email } = req.body;
+
+    if (!email) {
+      return res.status(400).json({ message: "Email is required" });
+    }
+
+    // Check if user exists
+    const user = await User.findOne({ email });
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    // If already verified, no need to resend
+    if (user.isVerified) {
+      return res.status(400).json({ message: "Account is already verified" });
+    }
+
+    // Send new verification email
+    await sendVerificationEmail(user);
+
+    return res.json({
+      message: "Verification email resent. Please check your inbox."
+    });
+
+  } catch (err) {
+    console.error("Resend verification error:", err);
+    return res.status(500).json({ message: "Internal server error" });
+  }
+};
 
 export const loginUser = async (req: Request, res: Response) => {
   try {
