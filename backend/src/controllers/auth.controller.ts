@@ -38,6 +38,7 @@ export const registerUser = async (req: Request, res: Response) => {
       password: hashedPassword,
       program
     });
+    
 
     //  Send verification link
     await sendVerificationEmail(newUser);

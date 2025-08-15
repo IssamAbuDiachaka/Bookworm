@@ -1,6 +1,5 @@
 import { v2 as cloudinary, UploadApiResponse } from 'cloudinary';
 import dotenv from 'dotenv';
-
 dotenv.config();
 
 cloudinary.config({
@@ -9,5 +8,4 @@ cloudinary.config({
   api_secret: process.env.CLOUDINARY_API_SECRET!,
 });
 
-//typed helper so controllers can use await uploadToCloudinary(buffer, options)
 export default cloudinary;
