@@ -1,36 +1,46 @@
-import { create } from 'zustand';
-// import { User } from '../types';
-import type { User } from '../types';
+import { create } from "zustand";
+import { persist } from "zustand/middleware";
 
-type AuthState = {
-  user: User | null;
-  token: string | null;
-  setAuth: (payload: { user: User; token: string }) => void;
-  clearAuth: () => void;
-};
+export interface AuthUser {
+  id: string;
+  name: string;
+  email: string;
+  role: "student" | "lecturer";
+  token: string;
+}
 
-export const useAuthStore = create<AuthState>((set) => ({
-  user: null,
-  token: null,
-  setAuth: ({ user, token }) => {
-    localStorage.setItem('token', token);
-    localStorage.setItem('user', JSON.stringify(user));
-    set({ user, token });
-  },
-  clearAuth: () => {
-    localStorage.removeItem('token');
-    localStorage.removeItem('user');
-    set({ user: null, token: null });
-  },
-}));
+interface AuthState {
+  user: AuthUser | null;
+  setUser: (user: AuthUser | null) => void;
+  logout: () => void;
+}
 
+// Persist the auth state (localStorage)
+export const useAuthStore = create<AuthState>()(
+  persist(
+    (set) => ({
+      user: null,
+      setUser: (user) => set({ user }),
+      logout: () => set({ user: null }),
+    }),
+    {
+      name: "bookworm-auth", // localStorage key
+      partialize: (state) => ({ user: state.user }), // only persist user
+    }
+  )
+);
+
+// Helper for main.tsx → preload user into memory if available
 export const loadAuthFromStorage = () => {
-  const token = localStorage.getItem('token');
-  const userRaw = localStorage.getItem('user');
-  if (token && userRaw) {
-    try {
-      const user = JSON.parse(userRaw) as User;
-      useAuthStore.getState().setAuth({ user, token });
-    } catch {}
+  try {
+    const raw = localStorage.getItem("bookworm-auth");
+    if (raw) {
+      const data = JSON.parse(raw).state?.user;
+      return data ?? null;
+    }
+    return null;
+  } catch (err) {
+    console.error("Failed to load auth from storage", err);
+    return null;
   }
 };

@@ -1,23 +1,21 @@
-import React from 'react';
-import ReactDOM from 'react-dom/client';
-import { BrowserRouter } from 'react-router-dom';
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import App from './App';
-import './index.css';
-import { SocketProvider } from './context/SocketProvider';
-import { loadAuthFromStorage } from './store/auth.store';
+import React from "react";
+import ReactDOM from "react-dom/client";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import App from "./App";
+import "./index.css";
+import { SocketProvider } from "./context/SocketProvider";
+import { loadAuthFromStorage } from "./store/auth.store";
 
-loadAuthFromStorage();
+loadAuthFromStorage(); // ensure user state is restored before app runs
+
 const queryClient = new QueryClient();
 
-ReactDOM.createRoot(document.getElementById('root')!).render(
+ReactDOM.createRoot(document.getElementById("root")!).render(
   <React.StrictMode>
     <QueryClientProvider client={queryClient}>
-      <BrowserRouter>
-        <SocketProvider>
-          <App />
-        </SocketProvider>
-      </BrowserRouter>
+      <SocketProvider>
+        <App />
+      </SocketProvider>
     </QueryClientProvider>
   </React.StrictMode>
 );
