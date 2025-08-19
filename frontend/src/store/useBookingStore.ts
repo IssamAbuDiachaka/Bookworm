@@ -1,5 +1,5 @@
 import { create } from "zustand";
-import API from "../api/axios";
+import API from "../lib/axios";
 
 interface Booking {
   _id: string;
@@ -21,7 +21,7 @@ export const useBookingStore = create<BookingStore>((set) => ({
   bookService: async (serviceId, date) => {
     await API.post("/bookings", { serviceId, date });
   },
-  createBooking: async ( serviceId, date ) => {
+  createBooking: async (serviceId, date) => {
     const res = await API.post("/bookings", { serviceId, date });
     set((state) => ({
       bookings: [...state.bookings, res.data],
@@ -32,10 +32,9 @@ export const useBookingStore = create<BookingStore>((set) => ({
     set({ bookings: res.data });
   },
   cancelBooking: async (id) => {
-  await API.delete(`/bookings/${id}`);
-  set((state) => ({
-    bookings: state.bookings.filter((b) => b._id !== id),
-  }));
-},
-
+    await API.delete(`/bookings/${id}`);
+    set((state) => ({
+      bookings: state.bookings.filter((b) => b._id !== id),
+    }));
+  },
 }));

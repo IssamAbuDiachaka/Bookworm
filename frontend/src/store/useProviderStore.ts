@@ -1,5 +1,5 @@
 import { create } from "zustand";
-import API from "../api/axios";
+import API from "../lib/axios";
 
 interface Provider {
   bio: string;
@@ -26,12 +26,11 @@ export const useProviderStore = create<ProviderStore>((set) => ({
     await API.post("/providers", data);
   },
   updateProfile: async (data) => {
-  const res = await API.put("/providers", data);
-  set({ profile: res.data });
-},
-deleteProfile: async () => {
-  await API.delete("/providers");
-  set({ profile: null });
-},
-
+    const res = await API.put("/providers", data);
+    set({ profile: res.data });
+  },
+  deleteProfile: async () => {
+    await API.delete("/providers");
+    set({ profile: null });
+  },
 }));

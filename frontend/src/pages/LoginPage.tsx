@@ -127,7 +127,7 @@ const LoginPage = () => {
           {/* Submit */}
           <button
             type="submit"
-            className="w-full py-2 bg-gray-800 hover:bg-gray-900 text-white rounded-lg flex items-center justify-center transition-colors"
+            className="w-full py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg flex items-center justify-center transition-colors cursor-pointer"
             disabled={isLoggingIn}
           >
             {isLoggingIn ? (
@@ -147,7 +147,7 @@ const LoginPage = () => {
             Don’t have an account?{" "}
             <Link
               to="/register"
-              className="text-gray-800 hover:underline font-medium"
+              className="text-blue-600 hover:underline font-medium"
             >
               Sign up
             </Link>

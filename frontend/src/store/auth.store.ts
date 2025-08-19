@@ -1,9 +1,8 @@
 // src/store/useAuthStore.ts
 import { create } from "zustand";
-import api from "../api/axios";
+import { api } from "../lib/axios";
 import toast from "react-hot-toast";
 import type { User } from "../types";
-import { type UserRole } from "../types";
 import type { NavigateFunction } from "react-router-dom";
 
 interface AuthState {
@@ -65,7 +64,7 @@ export const useAuthStore = create<AuthState>((set) => ({
         token: string;
       };
 
-      set({ user, token: authToken }); // now store token & user
+      set({ user, token: authToken }); //store token & user
       toast.success(res.data.message || "Account verified successfully!");
       navigate("/login");
     } catch (err: any) {

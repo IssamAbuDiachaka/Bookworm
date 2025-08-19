@@ -1,20 +1,19 @@
-export type UserRole = "customer" | "provider" | "admin";
+export type UserRole = "student" | "lecturer" | "admin";
 
 export interface User {
-  username: string;
+  name: string;
   email: string;
   role: UserRole;
+  program: string;
   avatar?: string;
 }
-
-
 
 export interface User {
   _id: string;
   username: string;
   email: string;
   role: UserRole;
-  avatar?: string; 
+  avatar?: string;
 }
 
 export interface ServiceProviderProfile {
@@ -55,7 +54,7 @@ export interface Message {
   receiverId: { _id: string; username: string; avatar?: string } | string;
   conversationId: string;
   content: string;
-  messageType: 'text';
+  messageType: "text";
   createdAt: string;
   updatedAt: string;
 }
@@ -67,17 +66,17 @@ export interface Booking {
   provider: string | ServiceProviderProfile;
   date: string; // ISO string
   time: string; // e.g. "14:00"
-  status: 'pending' | 'confirmed' | 'cancelled';
+  status: "pending" | "confirmed" | "cancelled";
   createdAt: string;
   updatedAt: string;
-}   
+}
 export interface BookingInput {
   serviceId: string;
   date: string; // ISO string
   time: string; // e.g. "14:00"
 }
 export interface BookingUpdateInput {
-  status: 'pending' | 'confirmed' | 'cancelled';
+  status: "pending" | "confirmed" | "cancelled";
 }
 export interface ProviderOnboardingInput {
   bio?: string;
@@ -117,7 +116,7 @@ export interface ChangePasswordInput {
 }
 export interface ForgotPasswordInput {
   email: string;
-}   
+}
 export interface ResetPasswordToken {
   token: string;
   userId: string;
@@ -141,16 +140,15 @@ export interface ServiceCategoryUpdateInput {
 export interface Notification {
   _id: string;
   userId: string; // User who receives the notification
-  type: 'booking' | 'message' | 'system';
+  type: "booking" | "message" | "system";
   content: string; // e.g. "New booking request"
   isRead: boolean;
   createdAt: string;
 }
 export interface NotificationInput {
-  type: 'booking' | 'message' | 'system';
+  type: "booking" | "message" | "system";
   content: string; // e.g. "New booking request"
 }
 export interface NotificationUpdateInput {
   isRead: boolean;
 }
-

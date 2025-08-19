@@ -1,5 +1,5 @@
 import { create } from "zustand";
-import API from "../api/axios";
+import API from "../lib/axios";
 
 interface Service {
   _id: string;
@@ -24,16 +24,15 @@ export const useServiceStore = create<ServiceState>((set) => ({
     set({ services: res.data });
   },
   updateService: async (id, data) => {
-  const res = await API.put(`/services/${id}`, data);
-  set((state) => ({
-    services: state.services.map((s) => (s._id === id ? res.data : s)),
-  }));
-},
-deleteService: async (id) => {
-  await API.delete(`/services/${id}`);
-  set((state) => ({
-    services: state.services.filter((s) => s._id !== id),
-  }));
-},
-
+    const res = await API.put(`/services/${id}`, data);
+    set((state) => ({
+      services: state.services.map((s) => (s._id === id ? res.data : s)),
+    }));
+  },
+  deleteService: async (id) => {
+    await API.delete(`/services/${id}`);
+    set((state) => ({
+      services: state.services.filter((s) => s._id !== id),
+    }));
+  },
 }));

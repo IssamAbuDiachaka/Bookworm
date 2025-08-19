@@ -11,10 +11,11 @@ const RegisterPage = () => {
   const [errors, setErrors] = useState<Record<string, string>>({});
 
   const [formData, setFormData] = useState({
-    username: "",
+    name: "",
     email: "",
     password: "",
-    role: "customer" as UserRole,
+    program: "",
+    role: "student" as UserRole,
     avatar: "",
   });
 
@@ -160,6 +161,32 @@ const RegisterPage = () => {
             )}
           </div>
 
+          {/* program */}
+          <div>
+            <label
+              htmlFor="program"
+              className="text-sm font-medium text-gray-700"
+            >
+              Program
+            </label>
+            <div className="relative mt-1">
+              <User className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 w-5 h-5" />
+              <input
+                id="program"
+                type="text"
+                className={inputClass("program")}
+                placeholder="Computer Science"
+                value={formData.program}
+                onChange={(e) =>
+                  setFormData({ ...formData, program: e.target.value })
+                }
+              />
+            </div>
+            {errors.program && (
+              <p className="text-red-500 text-xs mt-1">{errors.program}</p>
+            )}
+          </div>
+
           {/* Role */}
           <div>
             <label htmlFor="role" className="text-sm font-medium text-gray-700">
@@ -173,8 +200,8 @@ const RegisterPage = () => {
                 setFormData({ ...formData, role: e.target.value as UserRole })
               }
             >
-              <option value="customer">Customer</option>
-              <option value="provider">Provider</option>
+              <option value="student">Student</option>
+              <option value="lecturer">Lecturer</option>
               <option value="admin">Admin</option>
             </select>
           </div>
@@ -182,7 +209,7 @@ const RegisterPage = () => {
           {/* Submit */}
           <button
             type="submit"
-            className="w-full py-2 bg-gray-800 hover:bg-gray-900 text-white rounded-lg flex items-center justify-center transition-colors"
+            className="w-full py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg flex items-center justify-center transition-colors cursor-pointer"
             disabled={isSigningUp}
           >
             {isSigningUp ? (
@@ -202,7 +229,7 @@ const RegisterPage = () => {
             Already have an account?{" "}
             <Link
               to="/login"
-              className="text-gray-800 hover:underline font-medium"
+              className="text-blue-600 hover:underline font-medium"
             >
               Sign in
             </Link>
