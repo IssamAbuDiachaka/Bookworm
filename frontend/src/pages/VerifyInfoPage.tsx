@@ -1,4 +1,4 @@
-import { useAuthStore } from "../store/auth.store.new";
+import { useAuthStore } from "../store/auth.store";
 import toast from "react-hot-toast";
 
 export default function VerifyInfoPage() {
@@ -17,8 +17,8 @@ export default function VerifyInfoPage() {
     <div className="flex flex-col items-center justify-center min-h-screen p-4 text-center">
       <h1 className="text-2xl font-bold mb-4">Verify Your Email</h1>
       <p className="max-w-md">
-        We’ve sent a verification link to <strong>{email}</strong>.
-        Please click the link in the email to activate your account.
+        We’ve sent a verification link to <strong>{email}</strong>. Please click
+        the link in the email to activate your account.
       </p>
 
       <button

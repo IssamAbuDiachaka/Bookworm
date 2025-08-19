@@ -1,6 +1,6 @@
 import { useState } from "react";
-import { useAuthStore } from "../store/auth.store.new";
-import { Eye, EyeOff, Loader2, Lock, Mail, User, UserPlus } from "lucide-react";
+import { useAuthStore } from "../store/auth.store";
+import { Eye, EyeOff, Loader2, Lock, Mail, User } from "lucide-react";
 import { Link, useNavigate } from "react-router-dom";
 import type { UserRole } from "../types";
 
@@ -47,8 +47,8 @@ const RegisterPage = () => {
   };
 
   const inputClass = (field: keyof typeof formData) =>
-    `w-full pl-10 pr-3 py-2 border rounded-lg outline-none transition-colors 
-    ${errors[field] ? "border-red-500" : "border-gray-300"} 
+    `w-full pl-10 pr-3 py-2 border rounded-lg outline-none transition-colors
+    ${errors[field] ? "border-red-500" : "border-gray-300"}
     focus:border-gray-500`;
 
   return (
@@ -57,19 +57,24 @@ const RegisterPage = () => {
         {/* Header */}
         <div className="text-center mb-6">
           <div className="mx-auto w-14 h-14 rounded-full bg-gray-100 flex items-center justify-center">
-            <UserPlus className="w-7 h-7 text-gray-600" />
+            <User className="w-7 h-7 text-gray-600" />
           </div>
           <h1 className="mt-4 text-2xl font-bold text-gray-900">
             Create Account
           </h1>
-          <p className="text-gray-600 text-sm">Join our platform and get started</p>
+          <p className="text-gray-600 text-sm">
+            Join our platform and get started
+          </p>
         </div>
 
         {/* Form */}
         <form onSubmit={handleSubmit} className="space-y-5">
           {/* Username */}
           <div>
-            <label htmlFor="username" className="text-sm font-medium text-gray-700">
+            <label
+              htmlFor="username"
+              className="text-sm font-medium text-gray-700"
+            >
               Username
             </label>
             <div className="relative mt-1">
@@ -92,7 +97,10 @@ const RegisterPage = () => {
 
           {/* Email */}
           <div>
-            <label htmlFor="email" className="text-sm font-medium text-gray-700">
+            <label
+              htmlFor="email"
+              className="text-sm font-medium text-gray-700"
+            >
               Email
             </label>
             <div className="relative mt-1">
@@ -115,7 +123,10 @@ const RegisterPage = () => {
 
           {/* Password */}
           <div>
-            <label htmlFor="password" className="text-sm font-medium text-gray-700">
+            <label
+              htmlFor="password"
+              className="text-sm font-medium text-gray-700"
+            >
               Password
             </label>
             <div className="relative mt-1">

@@ -1,7 +1,7 @@
 // src/pages/VerifyPage.tsx
 import { useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import { useAuthStore } from "../store/auth.store.new";
+import { useAuthStore } from "../store/auth.store";
 
 export default function VerifyPage() {
   const { token } = useParams<{ token: string }>();

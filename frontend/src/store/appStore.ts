@@ -1,7 +1,7 @@
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
 
-// Define User type (expand later as needed)
+// User type
 export interface User {
   id: string;
   name: string;
@@ -44,7 +44,7 @@ export const useAppStore = create<AppState>()(
       partialize: (state) => ({
         theme: state.theme,
         user: state.user,
-      }), // only persist selected keys
+      }),
     }
   )
 );
