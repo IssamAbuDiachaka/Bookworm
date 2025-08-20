@@ -9,8 +9,4 @@ router.use("/auth", authRoutes);
 router.use("/user", userRoutes);
 router.use("/media", mediaRoutes);
 
-
-// router.use("/research", researchRoutes);
-// router.use("/tuition", tuitionRoutes);
-
 export default router;

@@ -1,12 +1,11 @@
-import mongoose,{ Schema, model, Document, Types } from "mongoose";
+import mongoose, { Schema, model, Document, Types } from "mongoose";
 
 // User roles
 export enum UserRole {
   STUDENT = "student",
   LECTURER = "lecturer",
-  ADMIN = "admin"
+  ADMIN = "admin",
 }
-
 
 export interface IUser extends Document {
   _id: Types.ObjectId;
@@ -21,11 +20,11 @@ export interface IUser extends Document {
     country?: string;
     address?: string;
     latitude?: number;
-    longitude?: number,
-  }
+    longitude?: number;
+  };
   isVerified?: boolean;
   verificationToken?: string | null;
-  verificationTokenExpires?: Date | null; 
+  verificationTokenExpires?: Date | null;
   isActive?: boolean;
   isDeleted?: boolean;
   createdAt: Date;
@@ -36,7 +35,7 @@ const userSchema = new Schema<IUser>(
   {
     name: { type: String, required: true, trim: true },
     email: { type: String, required: true, unique: true, lowercase: true },
-    password: { type: String, required: true },
+    password: { type: String, required: true, select: false },
     role: {
       type: String,
       enum: Object.values(UserRole),
@@ -44,12 +43,12 @@ const userSchema = new Schema<IUser>(
     },
     program: { type: String, required: true },
     avatar: { type: String, default: "" },
-    isVerified: {type: Boolean, default: false},
+    isVerified: { type: Boolean, default: false },
     verificationToken: { type: String, default: null },
-    verificationTokenExpires: { type: Date, default: null }
+    verificationTokenExpires: { type: Date, default: null },
   },
   {
-    timestamps: true 
+    timestamps: true,
   }
 );
 

@@ -7,7 +7,6 @@ import { generateAccessToken, generateRefreshToken } from "../utils/jwt";
 import jwt from "jsonwebtoken";
 import { sendVerificationEmail } from "@utils/sendVerificationEmail";
 
-
 export const registerUser = async (req: Request, res: Response) => {
   try {
     // Validate incoming data
@@ -15,7 +14,7 @@ export const registerUser = async (req: Request, res: Response) => {
     if (!parsed.success) {
       return res.status(400).json({
         message: "Validation failed",
-        errors: parsed.error.flatten().fieldErrors
+        errors: parsed.error.flatten().fieldErrors,
       });
     }
 
@@ -36,17 +35,16 @@ export const registerUser = async (req: Request, res: Response) => {
       name,
       email,
       password: hashedPassword,
-      program
+      program,
     });
-    
 
     //  Send verification link
     await sendVerificationEmail(newUser);
 
     // Return response
     return res.status(201).json({
-
-      message: "Registration successful. Please check your email to verify your account.",
+      message:
+        "Registration successful. Please check your email to verify your account.",
 
       user: {
         _id: newUser._id,
@@ -54,9 +52,9 @@ export const registerUser = async (req: Request, res: Response) => {
         email: newUser.email,
         role: newUser.role,
         program: newUser.program,
-        avatar: newUser.avatar
+        avatar: newUser.avatar,
       },
-       verificationsent: true
+      verificationsent: true,
     });
   } catch (err) {
     console.error("Register Error:", err);
@@ -74,7 +72,10 @@ export const verifyUser = async (req: Request, res: Response) => {
     }
 
     // Check if expired
-    if (!user.verificationTokenExpires || user.verificationTokenExpires < new Date()) {
+    if (
+      !user.verificationTokenExpires ||
+      user.verificationTokenExpires < new Date()
+    ) {
       return res.status(400).json({ message: "Verification link has expired" });
     }
 
@@ -84,10 +85,14 @@ export const verifyUser = async (req: Request, res: Response) => {
     user.verificationTokenExpires = null;
     await user.save();
 
-    return res.json({ message: "Account verified successfully. You can now log in." });
+    return res.json({
+      message: "Account verified successfully. You can now log in.",
+    });
   } catch (err) {
     console.error("Verify Error:", err);
-    return res.status(500).json({ message: "Internal server error, from verify user" });
+    return res
+      .status(500)
+      .json({ message: "Internal server error, from verify user" });
   }
 };
 
@@ -114,9 +119,8 @@ export const resendVerificationEmail = async (req: Request, res: Response) => {
     await sendVerificationEmail(user);
 
     return res.json({
-      message: "Verification email resent. Please check your inbox."
+      message: "Verification email resent. Please check your inbox.",
     });
-
   } catch (err) {
     console.error("Resend verification error:", err);
     return res.status(500).json({ message: "Internal server error" });
@@ -130,7 +134,7 @@ export const loginUser = async (req: Request, res: Response) => {
     if (!parsed.success) {
       return res.status(400).json({
         message: "Validation failed",
-        errors: parsed.error.flatten().fieldErrors
+        errors: parsed.error.flatten().fieldErrors,
       });
     }
 
@@ -143,7 +147,7 @@ export const loginUser = async (req: Request, res: Response) => {
     }
 
     if (!user.isVerified) {
-      return res.status(403).json({ message: "user is not verified"});
+      return res.status(403).json({ message: "user is not verified" });
     }
 
     // Compare passwords
@@ -161,31 +165,29 @@ export const loginUser = async (req: Request, res: Response) => {
       httpOnly: true,
       secure: process.env.NODE_ENV === "production",
       sameSite: "strict",
-      maxAge: 7 * 24 * 60 * 60 * 1000 // 7 days
+      maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
     });
 
     // Return access token & user info
     return res.status(200).json({
-      
       message: "Login successful",
-      
+
       user: {
         _id: user._id,
         name: user.name,
         email: user.email,
         role: user.role,
         program: user.program,
-        avatar: user.avatar
+        avatar: user.avatar,
+        isVerified: user.isVerified,
       },
-      accessToken
+      accessToken,
     });
-
   } catch (err) {
     console.error("Login Error:", err);
     return res.status(500).json({ message: "Internal server error" });
   }
 };
-
 
 export const refreshAccessToken = async (req: Request, res: Response) => {
   try {
@@ -200,7 +202,9 @@ export const refreshAccessToken = async (req: Request, res: Response) => {
     try {
       payload = jwt.verify(refreshToken, process.env.JWT_REFRESH_SECRET!);
     } catch {
-      return res.status(403).json({ message: "Invalid or expired refresh token" });
+      return res
+        .status(403)
+        .json({ message: "Invalid or expired refresh token" });
     }
 
     // Check if user still exists
@@ -218,17 +222,15 @@ export const refreshAccessToken = async (req: Request, res: Response) => {
       httpOnly: true,
       secure: process.env.NODE_ENV === "production",
       sameSite: "strict",
-      maxAge: 7 * 24 * 60 * 60 * 1000
+      maxAge: 7 * 24 * 60 * 60 * 1000,
     });
 
     // Return new access token
     return res.status(200).json({
-      accessToken: newAccessToken
+      accessToken: newAccessToken,
     });
-
   } catch (err) {
     console.error("Refresh token error:", err);
     return res.status(500).json({ message: "Internal server error" });
   }
 };
-

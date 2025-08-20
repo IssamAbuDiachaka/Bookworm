@@ -1,7 +1,11 @@
-import cloudinary from '../config/cloudinary.js';
-import { UploadApiResponse } from 'cloudinary';
+import cloudinary from "../config/cloudinary.js";
+import { UploadApiResponse } from "cloudinary";
+import streamifier from "streamifier";
 
-const uploadToCloudinary = (buffer: Buffer, folder = "bookworm_media"): Promise<UploadApiResponse> => {
+export const uploadToCloudinary = (
+  buffer: Buffer,
+  folder = "bookworm_media"
+): Promise<UploadApiResponse> => {
   return new Promise((resolve, reject) => {
     const stream = cloudinary.uploader.upload_stream(
       { folder },
@@ -13,9 +17,6 @@ const uploadToCloudinary = (buffer: Buffer, folder = "bookworm_media"): Promise<
     );
 
     // stream the buffer
-    const streamifier = require("streamifier");
     streamifier.createReadStream(buffer).pipe(stream);
   });
 };
-
-export default uploadToCloudinary;

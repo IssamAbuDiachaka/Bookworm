@@ -1,4 +1,3 @@
-// src/store/useAuthStore.ts
 import { create } from "zustand";
 import { api } from "../lib/axios";
 import toast from "react-hot-toast";
@@ -58,12 +57,11 @@ export const useAuthStore = create<AuthState>((set) => ({
   verifyUser: async (token, navigate) => {
     set({ isVerifying: true });
     try {
-      const res = await api.get(`/verify-email/${token}`);
+      const res = await api.get(`/auth/verify-email/${token}`);
       const { user, token: authToken } = res.data as {
         user: User;
         token: string;
       };
-
       set({ user, token: authToken }); //store token & user
       toast.success(res.data.message || "Account verified successfully!");
       navigate("/login");
@@ -77,7 +75,7 @@ export const useAuthStore = create<AuthState>((set) => ({
   // Resend verification link to email
   resendVerification: async (email) => {
     try {
-      await api.post("/resend-verification", { email });
+      await api.post("/auth/resend-verification", { email });
       toast.success("Verification email resent. Please check your inbox.");
     } catch (err: any) {
       toast.error(
@@ -108,6 +106,7 @@ export const useAuthStore = create<AuthState>((set) => ({
       // Save token + user if verified
       set({ token, user });
       toast.success("Welcome back!");
+      console.log("Login response:", res.data);
       navigate("/services");
     } catch (err: any) {
       toast.error(err?.response?.data?.message || "Login failed");

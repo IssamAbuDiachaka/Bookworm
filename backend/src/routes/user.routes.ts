@@ -1,22 +1,24 @@
 import { Router } from "express";
-import authenticateJWT from "src/middlewares/auth.middleware";
-import { authorizeRoles } from "src/middlewares/role.middleware";
-import { getUserProfile, uploadHandler } from "@controllers/user.controller";
+import authenticateJWT from "../middlewares/auth.middleware";
+import { handleUpload } from "../middlewares/upload.middleware";
+import {
+  getUserProfile,
+  updateUserProfile,
+  updateUserAvatar,
+  changePassword,
+} from "../controllers/user.controller";
 
-const router = Router();
+// user crud operations via /api/user
+const userRouter = Router();
 
-router.get("/profile", authenticateJWT, getUserProfile);
-
-router.post("/upload", authenticateJWT, authorizeRoles("student", "lecturer"), uploadHandler);
-
-
-router.get(
-  "/admin-dashboard",
+userRouter.get("/profile", authenticateJWT, getUserProfile);
+userRouter.put("/profile", authenticateJWT, updateUserProfile);
+userRouter.put(
+  "/avatar",
   authenticateJWT,
-  authorizeRoles("admin"), // must be admin
-  (req, res) => {
-    res.json({ message: "Admin access granted — list all users here" });
-  }
+  handleUpload("avatar"),
+  updateUserAvatar
 );
+userRouter.put("/password", authenticateJWT, changePassword);
 
-export default router;
+export default userRouter;

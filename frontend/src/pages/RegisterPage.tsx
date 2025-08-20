@@ -22,8 +22,8 @@ const RegisterPage = () => {
   const validateForm = () => {
     const newErrors: Record<string, string> = {};
 
-    if (!formData.username.trim()) {
-      newErrors.username = "Username is required";
+    if (!formData.name.trim()) {
+      newErrors.name = "Name is required";
     }
     if (!formData.email.trim()) {
       newErrors.email = "Email is required";
@@ -70,29 +70,26 @@ const RegisterPage = () => {
 
         {/* Form */}
         <form onSubmit={handleSubmit} className="space-y-5">
-          {/* Username */}
+          {/* Name */}
           <div>
-            <label
-              htmlFor="username"
-              className="text-sm font-medium text-gray-700"
-            >
-              Username
+            <label htmlFor="name" className="text-sm font-medium text-gray-700">
+              Name
             </label>
             <div className="relative mt-1">
               <User className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 w-5 h-5" />
               <input
-                id="username"
+                id="name"
                 type="text"
-                className={inputClass("username")}
+                className={inputClass("name")}
                 placeholder="John Doe"
-                value={formData.username}
+                value={formData.name}
                 onChange={(e) =>
-                  setFormData({ ...formData, username: e.target.value })
+                  setFormData({ ...formData, name: e.target.value })
                 }
               />
             </div>
-            {errors.username && (
-              <p className="text-red-500 text-xs mt-1">{errors.username}</p>
+            {errors.name && (
+              <p className="text-red-500 text-xs mt-1">{errors.name}</p>
             )}
           </div>
 
