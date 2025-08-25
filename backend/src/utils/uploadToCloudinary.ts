@@ -2,7 +2,7 @@ import cloudinary from "../config/cloudinary.js";
 import { UploadApiResponse } from "cloudinary";
 import streamifier from "streamifier";
 
-export const uploadToCloudinary = (
+const uploadToCloudinary = (
   buffer: Buffer,
   folder = "bookworm_media"
 ): Promise<UploadApiResponse> => {
@@ -20,3 +20,5 @@ export const uploadToCloudinary = (
     streamifier.createReadStream(buffer).pipe(stream);
   });
 };
+
+export default uploadToCloudinary;

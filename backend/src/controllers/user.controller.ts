@@ -1,8 +1,8 @@
-import { Request, Response } from "express";
+import { Response } from "express";
 import { AuthenticatedRequest } from "../middlewares/auth.middleware";
 import { User } from "../models/user.model";
 import bcrypt from "bcryptjs";
-import { uploadToCloudinary } from "@utils/uploadToCloudinary";
+import uploadToCloudinary from "@utils/uploadToCloudinary";
 
 //  Get user profile
 export const getUserProfile = async (
