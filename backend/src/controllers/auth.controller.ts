@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import bcrypt from "bcryptjs";
-import { IUser, User } from "../models/user.model";
+import { User } from "../models/user.model";
 import { registerSchema } from "../validations/auth.validation";
 import { loginSchema } from "../validations/auth.validation";
 import { generateAccessToken, generateRefreshToken } from "../utils/jwt";
@@ -158,7 +158,10 @@ export const loginUser = async (req: Request, res: Response) => {
 
     // Generate tokens
     const accessToken = generateAccessToken(user._id.toString(), user.role);
-    const refreshToken = generateRefreshToken(user._id.toString());
+    const refreshToken = generateRefreshToken(
+      user._id.toString()
+      // user.tokenVersion
+    );
 
     // Set HTTP-only cookie
     res.cookie("refreshToken", refreshToken, {
